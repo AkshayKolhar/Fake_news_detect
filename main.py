@@ -8,7 +8,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
 
 
-data=pd.read_csv("fake_or_real_news.csv")
+fake=pd.read_csv("fake.csv")
+true=pd.read_csv("true.csv")
+
+fake["label"] = "FAKE"
+true["label"] = "REAL"
+
+data=pd.concat([fake,true],axis=0)
+
+data= data.sample(frac=1, random_state=42).reset_index(drop=True)
 
 
 data["fake"]=data["label"].apply(lambda x:1 if x=="REAL" else 0)
@@ -37,3 +45,20 @@ result=clf.predict(vectorizer_input)
 if result[0]==1:
     print("The news is real")
 else:    print("The news is fake")
+
+
+if result[0] == 0:
+    real_news = data[data["fake"] == 1]["text"]
+
+    real_vectors = vectorizer.transform(real_news)
+    input_vector = vectorizer.transform([text])
+
+    # cosine similarity
+    from sklearn.metrics.pairwise import cosine_similarity
+    similarities = cosine_similarity(input_vector, real_vectors)
+
+    most_similar_index = similarities.argmax()
+    print("\n Similar REAL news example:")
+    real=real_news.iloc[most_similar_index]
+    print(real[:400]+"...")
+    
