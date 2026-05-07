@@ -9,7 +9,7 @@ from sklearn.svm import LinearSVC
 
 
 fake=pd.read_csv("fake.csv")
-true=pd.read_csv("true.csv")
+true=pd.read_csv("True.csv")
 
 fake["label"] = "FAKE"
 true["label"] = "REAL"
@@ -53,7 +53,7 @@ if result[0] == 0:
     real_vectors = vectorizer.transform(real_news)
     input_vector = vectorizer.transform([text])
 
-    # cosine similarity
+    
     from sklearn.metrics.pairwise import cosine_similarity
     similarities = cosine_similarity(input_vector, real_vectors)
 
